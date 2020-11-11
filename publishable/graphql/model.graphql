@@ -1,0 +1,99 @@
+#
+# PLAYER
+#
+type Player @model(class: "\\Rpg\\Models\\Player") {
+    id: ID!
+    name: String!
+    discord_id: String!
+    title: Title! @belongsTo
+    location: Location! @belongsTo
+    pets: [Pet] @hasMany
+    petsCount: Int! @count(relation: "pets")
+    inventories: [Inventory] @belongsToMany
+}
+
+type Title @model(class: "\\Rpg\\Models\\Player") {
+    id: ID!
+    name: String!
+}
+
+#
+# LOCATION
+#
+type Location @model(class: "\\Rpg\\Models\\Location") {
+    id: ID!
+    name: String!
+    monsters: [Monster!]! @belongsToMany
+    players: [Player] @hasMany
+    monstersCount: Int! @count(relation: "monsters")
+    PlayersCount: Int! @count(relation: "players")
+}
+
+#
+# MONSTER
+#
+type Monster @model(class: "\\Rpg\\Models\\Monster") {
+    id: ID!
+    name: String
+    locations: [Location!]! @belongsToMany
+    experience: Int!
+    type: MonsterType! @belongsTo
+    inventories: [Inventory] @belongsToMany
+}
+
+type MonsterType @model(class: "\\Rpg\\Models\\MonsterType") {
+    id: ID!
+    name: String!
+}
+
+type Pet @model(class: "\\Rpg\\Models\\Pet") {
+    id: ID!
+    name: String!
+    monster: Monster! @belongsTo
+    player: Player! @belongsTo
+}
+
+#
+# ITEMS
+#
+type Item @model(class: "\\Rpg\\Models\\Item") {
+    id: ID!
+    name: String!
+    description: String!
+    price: Int!
+    recipes: [Recipe] @hasMany
+    recipesCount: Int! @count(relation: "recipes")
+}
+
+type Recipe @model(class: "\\Rpg\\Models\\Recipe") {
+    id: ID!
+    name: String
+    quantity: Int!
+    ingredients: [Ingredient!]! @hasMany
+    result: Item! @belongsTo
+}
+
+type Ingredient @model(class: "\\Rpg\\Models\\Ingredient") {
+    id: ID!
+    name: String
+    recipe: Recipe! @belongsTo
+    item: Item! @belongsTo
+    quantity: Int!
+}
+
+#
+# INVENTORY
+#
+type Inventory @model(class: "\\Rpg\\Models\\Inventory") {
+    id: ID!
+    name: String!
+    items: [Item]! @belongsToMany
+    itemsCount: Int! @count(relation: "items")
+    Inventory_type: InventoryType @belongsTo
+}
+
+type InventoryType @model(class: "\\Rpg\\Models\\InventoryType") {
+    id: ID!
+    name: String!
+    capacity: Int!
+}

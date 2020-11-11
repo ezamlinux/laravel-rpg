@@ -1,0 +1,58 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+# Queries
+type Query {
+    players(orderBy: _ @orderBy, search: String @search): [Player!]! @paginate
+    player(id: ID @eq): Player @find
+
+    monsters(orderBy: _ @orderBy, search: String @search): [Monster!]! @paginate
+    monster(id: ID @eq): Monster @find
+
+    items(orderBy: _ @orderBy, search: String @search): [Item!]! @paginate
+    item(id: ID @eq): Item @find
+
+    locations(orderBy: _ @orderBy, search: String @search): [Location!]! @paginate
+    location(id: ID @eq): Location @find
+}
+
+# Mutations
+type Mutation {
+  createPlayer(name: String!, discord_id: String!): Player! @create
+  updatePlayer(id: ID!, name: String!, discord_id: String): Player @update
+  deletePlayer(id: ID!): Player @delete
+
+  createMonster(name: String!, experience: Int!, monster_type_id: Int!): Monster! @create
+  updateMonster(id: ID!, name: String!): Monster @update
+  deleteMonster(id: ID!): Monster @delete
+
+  createLocation(name: String!): Location! @create
+  updateLocation(id: ID!, name: String!): Location @update
+  deleteLocation(id: ID!): Location @delete
+
+  createItem(name: String!, price: Int!, description: String!): Item! @create
+  updateItem(id: ID!, name: String!): Item @update
+  deleteItem(id: ID!): Item @delete
+}
+
+# Models
+#import model.graphql
+
+# Inputs
+# input OrderByName {
+#     name: Sort
+# }
+
+# input OrderByDate {
+#     created_at: Sort
+#     updated_at: Sort
+#     deleted_at: Sort
+# }
+
+# enum Sort {
+#     asc
+#     desc
+# }
