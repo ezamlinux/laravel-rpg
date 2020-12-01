@@ -33,5 +33,10 @@ For database initialisation : `php artisan migrate`
 
 For dummy insertion : `php artisan rpg:inject`
 
+## DATABASE ERD
+Generated with [Laravel ER Diagram Generator](https://github.com/beyondcode/laravel-er-diagram-generator)
+
+![Laravel ERD](resources/graph.png)
+
 ## Note
 Think about using `Accept: application/json` Header to prevent troubleshoot during api usecase

@@ -26,7 +26,7 @@ class PlayerFactory extends Factory
             'name' => $this->faker->name,
             'biography' => $this->faker->text,
             'experience' => 0,
-            'level' => 1, // password
+            'level' => 1,
             'title_id' => Rpg::class('Title')::factory(),
             'zone_id' => Rpg::class('Zone')::factory()
         ];

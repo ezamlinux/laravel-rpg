@@ -54,7 +54,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * @var string
      */
-    protected $graphql =  __DIR__.'/../publishable/graphql/';
+    protected $graphql = __DIR__.'/../publishable/graphql/';
 
     /**
      * Register any application services.
@@ -76,9 +76,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $loader = AliasLoader::getInstance();
         $loader->alias('Rpg', RpgFacade::class);
-        $this->app->singleton('rpg', function () {
-            return new Rpg();
-        });
+        $this->app->singleton('rpg', fn () => new Rpg());
     }
 
     /**

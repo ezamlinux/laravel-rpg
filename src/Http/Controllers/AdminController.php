@@ -3,7 +3,6 @@
 namespace Rpg\Http\Controllers;
 
 use Rpg\Contract\PlayerContract;
-use Rpg\Models\Player;
 
 class AdminController extends \Rpg\Http\Controllers\Controller
 {
