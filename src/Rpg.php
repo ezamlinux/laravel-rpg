@@ -16,7 +16,7 @@ class Rpg
      */
     public $models = [];
 
-    public function setModels(array $models)
+    public function setModels(array $models) : void
     {
         foreach ($models as $alias => $model) {
             $this->models[$alias] = $model;
@@ -33,7 +33,7 @@ class Rpg
         return app($this->models[Str::studly($name)]);
     }
 
-    public function class($name)
+    public function class($name) : string
     {
         return $this->models[$name];
     }

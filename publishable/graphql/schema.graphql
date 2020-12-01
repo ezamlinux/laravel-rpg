@@ -9,11 +9,20 @@ type Query {
     players(orderBy: _ @orderBy, search: String @search): [Player!]! @paginate
     player(id: ID @eq): Player @find
 
+    titles(orderBy: _ @orderBy, search: String @search): [Title!]! @paginate
+    title(id: ID @eq): Title @find
+
     monsters(orderBy: _ @orderBy, search: String @search): [Monster!]! @paginate
     monster(id: ID @eq): Monster @find
 
+    monster_types(orderBy: _ @orderBy, search: String @search): [MonsterType!]! @paginate
+    monster_type(id: ID @eq): MonsterType @find
+
     items(orderBy: _ @orderBy, search: String @search): [Item!]! @paginate
     item(id: ID @eq): Item @find
+
+    recipes(orderBy: _ @orderBy, search: String @search): [Recipe!]! @paginate
+    recipe(id: ID @eq): Recipe @find
 
     locations(orderBy: _ @orderBy, search: String @search): [Location!]! @paginate
     location(id: ID @eq): Location @find
@@ -21,38 +30,35 @@ type Query {
 
 # Mutations
 type Mutation {
+
   createPlayer(name: String!, discord_id: String!): Player! @create
   updatePlayer(id: ID!, name: String!, discord_id: String): Player @update
   deletePlayer(id: ID!): Player @delete
+
+  createTitle(name: String!): Title! @create
+  updateTitle(id: ID!, name: String!): Title @update
+  deleteTitle(id: ID!): Title @delete
 
   createMonster(name: String!, experience: Int!, monster_type_id: Int!): Monster! @create
   updateMonster(id: ID!, name: String!): Monster @update
   deleteMonster(id: ID!): Monster @delete
 
-  createLocation(name: String!): Location! @create
-  updateLocation(id: ID!, name: String!): Location @update
-  deleteLocation(id: ID!): Location @delete
+  createMonsterType(name: String!): MonsterType! @create
+  updateMonsterType(id: ID!, name: String!): MonsterType @update
+  deleteMonsterType(id: ID!): MonsterType @delete
 
   createItem(name: String!, price: Int!, description: String!): Item! @create
   updateItem(id: ID!, name: String!): Item @update
   deleteItem(id: ID!): Item @delete
+
+  createRecipe(name: String!): Recipe! @create
+  updateRecipe(id: ID!, name: String!): Recipe @update
+  deleteRecipe(id: ID!): Recipe @delete
+
+  createLocation(name: String!): Location! @create
+  updateLocation(id: ID!, name: String!): Location @update
+  deleteLocation(id: ID!): Location @delete
 }
 
 # Models
 #import model.graphql
-
-# Inputs
-# input OrderByName {
-#     name: Sort
-# }
-
-# input OrderByDate {
-#     created_at: Sort
-#     updated_at: Sort
-#     deleted_at: Sort
-# }
-
-# enum Sort {
-#     asc
-#     desc
-# }
