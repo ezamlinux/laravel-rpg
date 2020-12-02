@@ -6,25 +6,25 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 
 # Queries
 type Query {
-    players(orderBy: _ @orderBy, search: String @search): [Player!]! @paginate
+    players(orderBy: _ @orderBy, search: String @search): [Player!]! @paginate(defaultCount: 25)
     player(id: ID @eq): Player @find
 
-    titles(orderBy: _ @orderBy, search: String @search): [Title!]! @paginate
+    titles(orderBy: _ @orderBy, search: String @search): [Title!]! @paginate(defaultCount: 25)
     title(id: ID @eq): Title @find
 
-    monsters(orderBy: _ @orderBy, search: String @search): [Monster!]! @paginate
+    monsters(orderBy: _ @orderBy, search: String @search): [Monster!]! @paginate(defaultCount: 25)
     monster(id: ID @eq): Monster @find
 
-    monster_types(orderBy: _ @orderBy, search: String @search): [MonsterType!]! @paginate
+    monster_types(orderBy: _ @orderBy, search: String @search): [MonsterType!]! @paginate(defaultCount: 25)
     monster_type(id: ID @eq): MonsterType @find
 
-    items(orderBy: _ @orderBy, search: String @search): [Item!]! @paginate
+    items(orderBy: _ @orderBy, search: String @search): [Item!]! @paginate(defaultCount: 25)
     item(id: ID @eq): Item @find
 
-    recipes(orderBy: _ @orderBy, search: String @search): [Recipe!]! @paginate
+    recipes(orderBy: _ @orderBy, search: String @search): [Recipe!]! @paginate(defaultCount: 25)
     recipe(id: ID @eq): Recipe @find
 
-    locations(orderBy: _ @orderBy, search: String @search): [Location!]! @paginate
+    locations(orderBy: _ @orderBy, search: String @search): [Location!]! @paginate(defaultCount: 25)
     location(id: ID @eq): Location @find
 }
 
