@@ -38,7 +38,9 @@ class RpgDummiesCommand extends Command
         $this->Player        = app(Rpg::class('Player'));
         $this->Title         = app(Rpg::class('Title'));
         $this->Monster       = app(Rpg::class('Monster'));
+        $this->MonsterType   = app(Rpg::class('MonsterType'));
         $this->Location      = app(Rpg::class('Location'));
+        $this->LocationType  = app(Rpg::class('LocationType'));
         $this->Item          = app(Rpg::class('Item'));
         $this->Recipe        = app(Rpg::class('Recipe'));
         $this->Inventory     = app(Rpg::class('Inventory'));
@@ -63,7 +65,6 @@ class RpgDummiesCommand extends Command
         /***
          * PLAYERS
          */
-        $this->firstPlayer = $this->source['data']['firstPlayer'];
         $this->titles = $this->source['data']['titles'];
 
         /**
@@ -77,14 +78,11 @@ class RpgDummiesCommand extends Command
          */
         $this->monsterTypes = $this->source['data']['monsterTypes'];
         $this->monsters = $this->source['data']['monsters'];
-        $this->first_pets = $this->source['data']['first_pets'];
 
         /**
          * ITEMS
          */
         $this->items = $this->source['data']['items'];
-        $this->recipes = $this->source['data']['recipes'];
-        $this->ingredients = $this->source['data']['ingredients'];
         $this->inventoryTypes = $this->source['data']['inventoryTypes'];
 
         if ($this->option('fresh'))
@@ -93,26 +91,33 @@ class RpgDummiesCommand extends Command
         }
 
         $this->dummyInventory();
-        $this->dummyPlayers();
+        $this->dummyTitles();
         $this->dummyLocations();
         $this->dummyMonsters();
         $this->dummyItems();
         $this->links();
     }
 
-    protected function dummyPlayers()
+    protected function dummyTitles()
     {
-        $this->info('Feeding Players ...');
+        $this->info('Feeding Titles ...');
 
-        $this->Player->firstOrCreate($this->firstPlayer);
         $this->Title->insert($this->titles);
     }
 
     protected function dummyLocations()
     {
         $this->info('Feeding Locations ...');
-        $this->Location->location_type()->insert($this->locationTypes);
-        $this->Location->insert($this->locations);
+
+        $this->LocationType->insert($this->locationTypes);
+
+        foreach ($this->locations as $location)
+        {
+            $this->Location->firstOrCreate(
+                ['name' => $location['name']],
+                ['minimal_level' => $location['minimal_level'], 'location_type_id' => $this->LocationType->where('name', $location['location_type']['name'])->value('id')]
+            );
+        }
     }
 
     public function dummyMonsters()
@@ -120,72 +125,61 @@ class RpgDummiesCommand extends Command
         $this->info('Feeding Monsters ...');
 
         $this->Monster->monster_type()->insert($this->monsterTypes);
-        $this->Monster->insert($this->monsters);
+
+        foreach ($this->monsters as $monster) {
+            $this->Monster->firstOrCreate(
+                ['name' => $monster['name']],
+                ['experience' => $monster['experience'], 'monster_type_id' => $this->MonsterType->where('name', $monster['monster_type']['name'])->value('id')]
+            );
+        }
     }
 
     protected function dummyItems()
     {
         $this->info('Feeding Items ...');
 
-        $this->Item->insert($this->items);
-        $this->Recipe->insert($this->recipes);
-        $this->Ingredient->insert($this->ingredients);
+        foreach ($this->items as $item)
+        {
+            $model = $this->Item->firstOrCreate(
+                ['name' => $item['name']],
+                ['price' => $item['price']]
+            );
+        }
+
+        // second loop for ingredients
+        foreach ($this->items as $item)
+        {
+            if (array_key_exists('recipes', $item)) {
+                foreach ($item['recipes'] as $dummy_recipe) {
+                    $recipe = $model->recipes()->firstOrCreate(
+                        ['name' => $dummy_recipe['name'], 'result_id' => $this->Item->where('name', $item['name'])->value('id')],
+                        ['quantity' => $dummy_recipe['quantity']]
+                    );
+
+                    foreach ($dummy_recipe['ingredients'] as $ingredient) {
+                        $this->Ingredient->firstOrCreate(
+                            [
+                                'recipe_id' => $recipe->id,
+                                'item_id' => $this->Item->where('name', $ingredient['item']['name'])->value('id'),
+                                'quantity' => $ingredient['quantity']
+                            ]
+                        );
+                    }
+                }
+            }
+        }
     }
 
     protected function dummyInventory()
     {
         $this->info('Feeding Inventory ...');
+
         $this->Inventory->inventory_type()->insert($this->inventoryTypes);
     }
 
     protected function links()
     {
         $this->info('Making some magical attachment ...');
-
-        // create first Player pet
-        $this->Player
-            ->find(1)
-            ->pets()
-            ->create($this->first_pets);
-
-        // Attach monsters to locations;
-        $locations = $this->Location->all();
-        $monsters = $this->Monster->all()->shuffle()->split($locations->count());
-
-        $locations->each(fn ($item, $key) => $item->monsters()->sync($monsters[$key]));
-
-        // Create Loot Table for Monster
-        $this->Monster
-            ->all()
-            ->each(function ($monster) {
-                $monster
-                    ->inventories()
-                    ->create([
-                        'name' => ($monster->name . ' Loot Table'),
-                        'inventory_type_id' => $this->InventoryType->where('name', 'loot_table')->value('id')
-                    ]);
-                // attach One random Item
-                $monster
-                    ->inventories()
-                    ->first()
-                    ->items()->sync($this->Item->get()->random(1));
-            });
-
-        // Create Bag for user
-        $this->Player
-            ->find(1)
-            ->inventories()
-            ->create([
-                'name' => 'Player Inventory',
-                'inventory_type_id' => $this->InventoryType->where('name', 'Duffel Bag')->value('id')
-            ]);
-
-        // Attach ingredient for Training Sword Recipe
-        $this->Player
-            ->find(1)
-            ->inventories->first()
-            ->items()
-            ->attach($this->Recipe->with('ingredients.item')->where('name', 'Training sword')->first()->ingredients->pluck('item.id'));
     }
 }
 

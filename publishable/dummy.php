@@ -2,17 +2,27 @@
 
 return [
     'data' => [
-        /***
-         * PLAYERS
-         */
+        // unused for now
         'firstPlayer' => [
             'name' => 'eZam',
             'discord_id' => '408297934128414731',
-            'title_id' => 1,
+            'title' => [
+                'name' => 'Ranger'
+            ],
             'level' => 1,
-            'experience' => 0
+            'experience' => 0,
+            'pets' => [
+                'name' => 'Kanigou',
+                'experience' => 0,
+                'monster' => [
+                    'name' => 'Wolf'
+                ],
+            ],
         ],
 
+        /***
+         * PLAYERS
+         */
         'titles' => [
             ['name' => 'Ranger'],
             ['name' => 'Rogue'],
@@ -30,12 +40,16 @@ return [
             [
                 'name' => 'Kantho',
                 'minimal_level' => 0,
-                'location_type_id' => 2
+                'location_type' => [
+                    'name' => 'Region'
+                ]
             ],
             [
                 'name' => 'Hoenn',
                 'minimal_level' => 5,
-                'location_type_id' => 2
+                'location_type' => [
+                    'name' => 'Region'
+                ]
             ]
         ],
 
@@ -73,57 +87,108 @@ return [
             [
                 'name' => 'Wolf',
                 'experience' => 5,
-                'monster_type_id' => 2
+                'monster_type' => [
+                    'name' => 'small'
+                ]
             ],
             [
                 'name' => 'Slime',
                 'experience' => 3,
-                'monster_type_id' => 1
+                'monster_type' => [
+                    'name' => 'small'
+                ]
             ],
             [
                 'name' => 'Goblin',
                 'experience' => 5,
-                'monster_type_id' => 2
+                'monster_type' => [
+                    'name' => 'medium'
+                ]
             ],
             [
                 'name' => 'Troll',
                 'experience' => 10,
-                'monster_type_id' => 1
+                'monster_type' => [
+                    'name' => 'big'
+                ]
             ],
             [
                 'name'  => 'Hydra',
                 'experience' => 20,
-                'monster_type_id' => 4
+                'monster_type' => [
+                    'name' => 'titan'
+                ]
             ]
-        ],
-
-        'first_pets' => [
-            'name' => 'Kanigou',
-            'experience' => 0,
-            'monster_id' => 2,
         ],
 
         /**
          * ITEMS
          */
-
         'items' => [
             // Equipement
             [
                 'name' => 'Training Sword',
                 'price' => 50,
+                'recipes' => [
+                    [
+                        'name' => 'Training sword',
+                        'quantity' => 1,
+                        'ingredients' => [
+                            [
+                                'item' => [
+                                    'name' => 'Wooden Sword'
+                                ],
+                                'quantity' => 1
+                            ],
+                            [
+                                'item' => [
+                                    'name' => 'Rope'
+                                ],
+                                'quantity' => 2
+                            ],
+                        ]
+                    ],
+                    [
+                        'name' => 'Training sword alternate',
+                        'quantity' => 1,
+                        'ingredients' => [
+                            [
+                                'item' => [
+                                    'name' => 'Wooden Sword'
+                                ],
+                                'quantity' => 2
+                            ],
+                            [
+                                'item' => [
+                                    'name' => 'Rope'
+                                ],
+                                'quantity' => 1
+                            ],
+                        ]
+                    ],
+                ]
             ],
             [
                 'name' => 'Wooden Sword',
                 'price' => 5,
+                'recipes' => [
+                    [
+                        'name' => 'Wooden Sword',
+                        'quantity' => 1,
+                        'ingredients' => [
+                            [
+                                'item' => [
+                                    'name' => 'Wood'
+                                ],
+                                'quantity' => 2
+                            ],
+                        ]
+                    ],
+                ]
             ],
             [
                 'name' => 'Wooden Armor',
                 'price' => 5,
-            ],
-            [
-                'name' => 'Fish Sword',
-                'price' => 10,
             ],
             // Items
             [
@@ -131,106 +196,64 @@ return [
                 'price' => 1,
             ],
             [
-                'name' => 'wood',
+                'name' => 'Wood',
                 'price' => 1,
             ],
             // Food
             [
-                'name' => 'egg',
+                'name' => 'Egg',
                 'price' => 1
             ],
             [
-                'name' => 'raw meat',
+                'name' => 'Raw Meat',
                 'price' => 5
             ],
             [
-                'name' => 'salt',
+                'name' => 'Salt',
                 'price' => 1
             ],
             // Cooking
             [
                 'name' => 'cooked meat',
-                'price' => 10
+                'price' => 10,
+                'recipes' => [
+                    [
+                        'name' => 'Cooked meat',
+                        'quantity' => 1,
+                        'ingredients' => [
+                            [
+                                'item' => [
+                                    'name' => 'Raw Meat'
+                                ],
+                                'quantity' => 1
+                            ],
+                        ]
+                    ],
+                ]
             ],
             [
                 'name' => 'Bacon and Eggs',
-                'price' => 12
-            ]
-        ],
-
-        'recipes' => [
-            [
-                'name' => 'Training sword',
-                'result_id' => 1,
-                'quantity' => 1
-            ],
-            [
-                'name' => 'Training sword alternate',
-                'result_id' => 1,
-                'quantity' => 1
-            ],
-            [
-                'name' => 'Wooden sword',
-                'result_id' => 2,
-                'quantity' => 1
-            ],
-            [
-                'name' => 'Cooked meat',
-                'result_id' => 10,
-                'quantity' => 1
-            ],
-            [
-                'name' => 'Bacon and Eggs',
-                'result_id' => 11,
-                'quantity' => 1
-            ]
-        ],
-
-        'ingredients' => [
-            // Training sword
-            [
-                'recipe_id' => 1,
-                'item_id' => 2,
-                'quantity' => 1
-            ],
-            [
-                'recipe_id' => 1,
-                'item_id' => 5,
-                'quantity' => 2
-            ],
-            // Training sword alternate
-            [
-                'recipe_id' => 2,
-                'item_id' => 2,
-                'quantity' => 2
-            ],
-            [
-                'recipe_id' => 2,
-                'item_id' => 5,
-                'quantity' => 1
-            ],
-            // Wooden sword
-            [
-                'recipe_id' => 3,
-                'item_id' => 6,
-                'quantity' => 2
-            ],
-            // 4 Cooked meat
-            [
-                'recipe_id' => 4,
-                'item_id' => 8,
-                'quantity' => 1
-            ],
-            // 5 bacons and eggs
-            [
-                'recipe_id' => 5,
-                'item_id' => 8,
-                'quantity' => 1
-            ],
-            [
-                'recipe_id' => 5,
-                'item_id' => 7,
-                'quantity' => 2
+                'price' => 12,
+                'recipes' => [
+                    [
+                        'name' => 'Bacon and Eggs',
+                        'quantity' => 1,
+                        'ingredients' => [
+                            [
+                                'item' => [
+                                    'name' => 'Raw Meat'
+                                ],
+                                'quantity' => 1
+                            ],
+                            [
+                                'item' => [
+                                    'name' => 'Egg'
+                                ],
+                                'quantity' => 2
+                            ]
+                        ]
+                    ]
+                ],
             ]
         ],
 
