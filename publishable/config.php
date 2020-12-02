@@ -18,11 +18,16 @@ return [
         'namespace' => 'Rpg\\Http\\Controllers',
     ],
 
+    // Factory
+    'aliases' => [
+      'Rpg' => Rpg\Facades\Rpg::class
+    ],
+
     /**
      * Overwrite your class here
      */
     'models' => [
-        'User'        => App\User::class,
+        'User'          => App\User::class,
 
         // RPG
         'Player'        => Rpg\Models\Player::class,

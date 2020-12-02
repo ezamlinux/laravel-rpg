@@ -2,11 +2,9 @@
 
 namespace Rpg;
 
-use Rpg\Facades\Rpg as RpgFacade;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
-use Rpg\Rpg;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -75,7 +73,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadViewsFrom($this->resources.'views', 'rpg');
 
         $loader = AliasLoader::getInstance();
-        $loader->alias('Rpg', RpgFacade::class);
+        foreach (config('rpg.aliases') as $alias => $class) {
+            $loader->alias($alias, $class);
+        }
+
         $this->app->singleton('rpg', fn () => new Rpg());
     }
 
@@ -90,7 +91,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$this->dummy => config_path('rpg_dummy.php')], 'rpg-dummy');
         $this->publishes([$this->graphql => base_path('graphql')], 'rpg-graphql');
 
-        // Model Bingins
+        // Routing Model Bindings
         foreach($this->app['rpg']->getModels() as $key => $class) {
             $this->app['router']->model(Str::lower($key), $class);
         }
