@@ -11,6 +11,12 @@ class Recipe extends Model implements RecipeContract
 {
     use Searchable;
 
+    protected $fillable = [
+        'name',
+        'quantity',
+        'result_id'
+    ];
+
     public function toSearchableArray()
     {
         return [

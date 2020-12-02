@@ -12,6 +12,11 @@ class Item extends Model implements ItemContract
 {
     use Searchable, HasFactory;
 
+    protected $fillable = [
+        'name',
+        'price',
+    ];
+
     public function toSearchableArray()
     {
         return [

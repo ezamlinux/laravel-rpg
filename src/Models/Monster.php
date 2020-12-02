@@ -12,6 +12,12 @@ class Monster extends Model implements MonsterContract
 {
     use HasFactory, HasInventory;
 
+    protected $fillable = [
+        'name',
+        'experience',
+        'monster_type_id'
+    ];
+
     protected static function newFactory()
     {
         return \Database\Factories\MonsterFactory::new();

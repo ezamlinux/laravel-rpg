@@ -7,6 +7,12 @@ use Rpg;
 
 class Ingredient extends Model
 {
+    protected $fillable = [
+        'recipe_id',
+        'item_id',
+        'quantity'
+    ];
+
     public function recipe()
     {
         return $this->belongsTo(Rpg::class('Recipe'));

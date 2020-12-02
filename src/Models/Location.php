@@ -14,7 +14,8 @@ class Location extends Model implements LocationContract
     protected $fillable = [
         'name',
         'minimal_level',
-        'parent_id'
+        'parent_id',
+        'location_type_id'
     ];
 
     protected static function newFactory()
