@@ -11,12 +11,12 @@ class InitialisationRpgV1 extends Migration
      */
     public function up()
     {
-        $this->upPlayers();
-        $this->upMonsters();
-        $this->upInventories();
-        $this->upItems();
         $this->upTitles();
         $this->upLocations();
+        $this->upPlayers();
+        $this->upMonsters();
+        $this->upItems();
+        $this->upInventories();
     }
 
     /**
@@ -26,8 +26,8 @@ class InitialisationRpgV1 extends Migration
     {
         $this->downPlayers();
         $this->downMonsters();
-        $this->downInventories();
         $this->downItems();
+        $this->downInventories();
         $this->downTitles();
         $this->downLocations();
     }
@@ -42,10 +42,10 @@ class InitialisationRpgV1 extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->index();
             $table->string('discord_id');
-            $table->integer('title_id')->default('1')->index();
-            $table->integer('location_id')->default('1')->index();
+            $table->foreignId('title_id')->index();
+            $table->foreignId('location_id')->index();
             $table->string('name');
             $table->text('biography')->nullable();
             $table->integer('experience')->default('0');
@@ -53,19 +53,18 @@ class InitialisationRpgV1 extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // FOREIGN KEY
+
+        Schema::table('players', function($table) {
+            $table->foreign('title_id')->references('id')->on('titles');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('location_id')->references('id')->on('locations');
+        });
     }
 
     public function upMonsters()
     {
-        Schema::create('monsters', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->integer('experience');
-            $table->integer('monster_type_id');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         Schema::create('monster_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
@@ -73,53 +72,88 @@ class InitialisationRpgV1 extends Migration
             $table->softDeletes();
         });
 
+        Schema::create('monsters', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->integer('experience');
+            $table->foreignId('monster_type_id');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('location_monster', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('monster_id');
-            $table->integer('location_id');
+            $table->foreignId('monster_id');
+            $table->foreignId('location_id');
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::create('pets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('monster_id');
-            $table->integer('player_id');
+            $table->foreignId('monster_id');
+            $table->foreignId('player_id');
             $table->string('name');
             $table->integer('level')->default('1');
             $table->integer('experience');
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // FOREIGN KEY
+
+        Schema::table('monsters', function($table) {
+            $table->foreign('monster_type_id')->references('id')->on('monster_types');
+        });
+
+        Schema::table('location_monster', function($table) {
+            $table->foreign('monster_id')->references('id')->on('monsters');
+            $table->foreign('location_id')->references('id')->on('locations');
+        });
+
+        Schema::table('pets', function($table) {
+            $table->foreign('monster_id')->references('id')->on('monsters');
+            $table->foreign('player_id')->references('id')->on('players');
+        });
     }
 
     public function upInventories()
     {
-        Schema::create('inventories', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('inventorable_type')->index();
-            $table->integer('inventorable_id')->index();
-            $table->integer('inventory_type_id')->index();
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::create('inventory_item', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('item_id')->index();
-            $table->integer('inventory_id')->index();
-            $table->integer('quantity')->default('1');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         Schema::create('inventory_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->integer('capacity');
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('inventories', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->morphs('inventorable');
+            $table->foreignId('inventory_type_id')->index();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('inventory_item', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->foreignId('item_id')->index();
+            $table->foreignId('inventory_id')->index();
+            $table->integer('quantity')->default('1');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        // FOREIGN KEY
+
+        Schema::table('inventories', function($table) {
+            $table->foreign('inventory_type_id')->references('id')->on('inventory_types');
+        });
+
+        Schema::table('inventory_item', function($table) {
+            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('inventory_id')->references('id')->on('inventories');
         });
     }
 
@@ -137,7 +171,7 @@ class InitialisationRpgV1 extends Migration
         Schema::create('recipes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->integer('result_id');
+            $table->foreignId('result_id');
             $table->integer('quantity')->default('1');
             $table->timestamps();
             $table->softDeletes();
@@ -145,11 +179,22 @@ class InitialisationRpgV1 extends Migration
 
         Schema::create('ingredients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('recipe_id');
-            $table->integer('item_id');
+            $table->foreignId('recipe_id');
+            $table->foreignId('item_id');
             $table->integer('quantity');
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        // FOREIGN KEY
+
+        Schema::table('recipes', function($table) {
+            $table->foreign('result_id')->references('id')->on('items');
+        });
+
+        Schema::table('ingredients', function($table) {
+            $table->foreign('item_id')->references('id')->on('items');
+            $table->foreign('recipe_id')->references('id')->on('recipes');
         });
     }
 
@@ -165,21 +210,28 @@ class InitialisationRpgV1 extends Migration
 
     public function upLocations()
     {
-        Schema::create('locations', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->integer('location_type_id')->index();
-            $table->integer('parent_id')->nullable()->index();
-            $table->integer('minimal_level');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
         Schema::create('location_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('locations', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->foreignId('location_type_id')->index();
+            $table->integer('parent_id')->nullable()->index();
+            $table->integer('minimal_level')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        // FOREIGN KEY
+
+        Schema::table('locations', function($table) {
+            $table->foreign('location_type_id')->references('id')->on('location_types');
+            $table->foreign('parent_id')->references('id')->on('locations');
         });
     }
 

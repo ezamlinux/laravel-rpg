@@ -38,8 +38,7 @@ return [
          **/
         'locations' => [
             [
-                'name' => 'Kantho',
-                'minimal_level' => 0,
+                'name' => 'Kanto',
                 'location_type' => [
                     'name' => 'Region'
                 ]
@@ -49,6 +48,34 @@ return [
                 'minimal_level' => 5,
                 'location_type' => [
                     'name' => 'Region'
+                ]
+            ],
+            [
+                'name' => 'Céladopole',
+                'minimal_level' => 5,
+                'location_type' => [
+                    'name' => 'City'
+                ],
+                'parent' => [
+                    'name' => 'Kanto'
+                ]
+            ],
+            [
+                'name' => 'Lavanville',
+                'location_type' => [
+                    'name' => 'City'
+                ],
+                'parent' => [
+                    'name' => 'Kanto'
+                ]
+            ],
+            [
+                'name' => 'Lavandia',
+                'location_type' => [
+                    'name' => 'City'
+                ],
+                'parent' => [
+                    'name' => 'Hoenn'
                 ]
             ]
         ],

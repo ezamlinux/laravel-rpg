@@ -60,7 +60,14 @@ class RpgDummiesCommand extends Command
             return false;
         }
 
+        $startTime = microtime(TRUE);
+
         $this->source = config($this->option('config'));
+
+        $this->timestamps = [
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
 
         /***
          * PLAYERS
@@ -95,27 +102,36 @@ class RpgDummiesCommand extends Command
         $this->dummyLocations();
         $this->dummyMonsters();
         $this->dummyItems();
-        $this->links();
+
+        $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
+
+        $this->line('<info>Seeding done.</info> ('.$runTime.'ms)');
     }
 
     protected function dummyTitles()
     {
         $this->info('Feeding Titles ...');
 
-        $this->Title->insert($this->titles);
+        $this->Title->insert(array_map(fn ($x) => array_merge($x, $this->timestamps), $this->titles));
     }
 
     protected function dummyLocations()
     {
         $this->info('Feeding Locations ...');
 
-        $this->LocationType->insert($this->locationTypes);
+        $this->LocationType->insert(array_map(fn ($x) => array_merge($x, $this->timestamps), $this->locationTypes));
 
-        foreach ($this->locations as $location)
+        foreach ($this->locations as $dummy_location)
         {
             $this->Location->firstOrCreate(
-                ['name' => $location['name']],
-                ['minimal_level' => $location['minimal_level'], 'location_type_id' => $this->LocationType->where('name', $location['location_type']['name'])->value('id')]
+                ['name' => $dummy_location['name']],
+                array_merge(
+                    [
+                        'minimal_level' => $dummy_location['minimal_level'] ?? null,
+                        'location_type_id' => $this->LocationType->where('name', $dummy_location['location_type']['name'])->value('id'),
+                        'parent_id' => $this->Location->where('name', $dummy_location['parent']['name'] ?? null)->value('id'),
+                    ], $this->timestamps
+                )
             );
         }
     }
@@ -124,12 +140,17 @@ class RpgDummiesCommand extends Command
     {
         $this->info('Feeding Monsters ...');
 
-        $this->Monster->monster_type()->insert($this->monsterTypes);
+        $this->Monster->monster_type()->insert(array_map(fn ($x) => array_merge($x, $this->timestamps), $this->monsterTypes));
 
         foreach ($this->monsters as $monster) {
             $this->Monster->firstOrCreate(
                 ['name' => $monster['name']],
-                ['experience' => $monster['experience'], 'monster_type_id' => $this->MonsterType->where('name', $monster['monster_type']['name'])->value('id')]
+                array_merge(
+                    [
+                        'experience' => $monster['experience'],
+                        'monster_type_id' => $this->MonsterType->where('name', $monster['monster_type']['name'])->value('id')
+                    ], $this->timestamps
+                )
             );
         }
     }
@@ -142,18 +163,18 @@ class RpgDummiesCommand extends Command
         {
             $model = $this->Item->firstOrCreate(
                 ['name' => $item['name']],
-                ['price' => $item['price']]
+                ['price' => $item['price'],['description' => $item['description'] ?? null]]
             );
         }
 
-        // second loop for ingredients
+        // second loop for recipes and ingredients
         foreach ($this->items as $item)
         {
             if (array_key_exists('recipes', $item)) {
                 foreach ($item['recipes'] as $dummy_recipe) {
                     $recipe = $model->recipes()->firstOrCreate(
                         ['name' => $dummy_recipe['name'], 'result_id' => $this->Item->where('name', $item['name'])->value('id')],
-                        ['quantity' => $dummy_recipe['quantity']]
+                        array_merge(['quantity' => $dummy_recipe['quantity']], $this->timestamps)
                     );
 
                     foreach ($dummy_recipe['ingredients'] as $ingredient) {
@@ -162,7 +183,8 @@ class RpgDummiesCommand extends Command
                                 'recipe_id' => $recipe->id,
                                 'item_id' => $this->Item->where('name', $ingredient['item']['name'])->value('id'),
                                 'quantity' => $ingredient['quantity']
-                            ]
+                            ],
+                            $this->timestamps
                         );
                     }
                 }
@@ -174,12 +196,7 @@ class RpgDummiesCommand extends Command
     {
         $this->info('Feeding Inventory ...');
 
-        $this->Inventory->inventory_type()->insert($this->inventoryTypes);
-    }
-
-    protected function links()
-    {
-        $this->info('Making some magical attachment ...');
+        $this->Inventory->inventory_type()->insert(array_map(fn ($x) => array_merge($x, $this->timestamps), $this->inventoryTypes));
     }
 }
 
