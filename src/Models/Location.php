@@ -40,7 +40,7 @@ class Location extends Model implements LocationContract
 
     public function childs()
     {
-        return $this->hasMany(Rpg::class('Location'));
+        return $this->hasMany(Rpg::class('Location'), 'parent_id');
     }
 
     public function location_type()
