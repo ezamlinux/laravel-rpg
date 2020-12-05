@@ -15,7 +15,7 @@ type Player @model(class: "\\Rpg\\Models\\Player") {
     deleted_at: DateTime
 }
 
-type Title @model(class: "\\Rpg\\Models\\Player") {
+type Title @model(class: "\\Rpg\\Models\\Title") {
     id: Int!
     name: String!
     created_at: DateTime
@@ -33,7 +33,7 @@ type Location @model(class: "\\Rpg\\Models\\Location") {
     players: [Player] @hasMany
     monstersCount: Int @count(relation: "monsters")
     PlayersCount: Int @count(relation: "players")
-    parent: [Location] @belongsTo
+    parent: Location @belongsTo
     childs: [Location] @hasMany
     created_at: DateTime
     updated_at: DateTime
