@@ -7,57 +7,57 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 # Queries
 type Query {
     players(orderBy: _ @orderBy, search: String @search): [Player!]! @paginate(defaultCount: 25)
-    player(id: ID @eq): Player @find
+    player(id: Int @eq, discord_id: String @eq): Player @find
 
     titles(orderBy: _ @orderBy, search: String @search): [Title!]! @paginate(defaultCount: 25)
-    title(id: ID @eq): Title @find
+    title(id: Int @eq): Title @find
 
     monsters(orderBy: _ @orderBy, search: String @search): [Monster!]! @paginate(defaultCount: 25)
-    monster(id: ID @eq): Monster @find
+    monster(id: Int @eq): Monster @find
 
     monster_types(orderBy: _ @orderBy, search: String @search): [MonsterType!]! @paginate(defaultCount: 25)
-    monster_type(id: ID @eq): MonsterType @find
+    monster_type(id: Int @eq): MonsterType @find
 
     items(orderBy: _ @orderBy, search: String @search): [Item!]! @paginate(defaultCount: 25)
-    item(id: ID @eq): Item @find
+    item(id: Int @eq): Item @find
 
     recipes(orderBy: _ @orderBy, search: String @search): [Recipe!]! @paginate(defaultCount: 25)
-    recipe(id: ID @eq): Recipe @find
+    recipe(id: Int @eq): Recipe @find
 
     locations(orderBy: _ @orderBy, search: String @search): [Location!]! @paginate(defaultCount: 25)
-    location(id: ID @eq): Location @find
+    location(id: Int @eq): Location @find
 }
 
 # Mutations
 type Mutation {
 
-  createPlayer(name: String!, discord_id: String!): Player! @create
-  updatePlayer(id: ID!, name: String!, discord_id: String): Player @update
-  deletePlayer(id: ID!): Player @delete
+  createPlayer(name: String!, discord_id: String!, title_id: Int!, location_id: Int!): Player! @create
+  updatePlayer(id: Int!, name: String!, discord_id: String): Player @update
+  deletePlayer(id: Int!): Player @delete
 
   createTitle(name: String!): Title! @create
-  updateTitle(id: ID!, name: String!): Title @update
-  deleteTitle(id: ID!): Title @delete
+  updateTitle(id: Int!, name: String!): Title @update
+  deleteTitle(id: Int!): Title @delete
 
   createMonster(name: String!, experience: Int!, monster_type_id: Int!): Monster! @create
-  updateMonster(id: ID!, name: String!): Monster @update
-  deleteMonster(id: ID!): Monster @delete
+  updateMonster(id: Int!, name: String!): Monster @update
+  deleteMonster(id: Int!): Monster @delete
 
   createMonsterType(name: String!): MonsterType! @create
-  updateMonsterType(id: ID!, name: String!): MonsterType @update
-  deleteMonsterType(id: ID!): MonsterType @delete
+  updateMonsterType(id: Int!, name: String!): MonsterType @update
+  deleteMonsterType(id: Int!): MonsterType @delete
 
   createItem(name: String!, price: Int!, description: String!): Item! @create
-  updateItem(id: ID!, name: String!): Item @update
-  deleteItem(id: ID!): Item @delete
+  updateItem(id: Int!, name: String!): Item @update
+  deleteItem(id: Int!): Item @delete
 
   createRecipe(name: String!): Recipe! @create
-  updateRecipe(id: ID!, name: String!): Recipe @update
-  deleteRecipe(id: ID!): Recipe @delete
+  updateRecipe(id: Int!, name: String!): Recipe @update
+  deleteRecipe(id: Int!): Recipe @delete
 
   createLocation(name: String!): Location! @create
-  updateLocation(id: ID!, name: String!): Location @update
-  deleteLocation(id: ID!): Location @delete
+  updateLocation(id: Int!, name: String!): Location @update
+  deleteLocation(id: Int!): Location @delete
 }
 
 # Models

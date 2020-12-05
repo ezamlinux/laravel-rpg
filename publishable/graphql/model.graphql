@@ -2,7 +2,7 @@
 # PLAYER
 #
 type Player @model(class: "\\Rpg\\Models\\Player") {
-    id: ID!
+    id: Int!
     name: String!
     discord_id: String!
     title: Title! @belongsTo
@@ -10,90 +10,125 @@ type Player @model(class: "\\Rpg\\Models\\Player") {
     pets: [Pet] @hasMany
     petsCount: Int! @count(relation: "pets")
     inventories: [Inventory] @belongsToMany
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 type Title @model(class: "\\Rpg\\Models\\Player") {
-    id: ID!
+    id: Int!
     name: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 #
 # LOCATION
 #
 type Location @model(class: "\\Rpg\\Models\\Location") {
-    id: ID!
+    id: Int!
     name: String!
-    monsters: [Monster!]! @belongsToMany
+    monsters: [Monster] @belongsToMany
     players: [Player] @hasMany
-    monstersCount: Int! @count(relation: "monsters")
-    PlayersCount: Int! @count(relation: "players")
+    monstersCount: Int @count(relation: "monsters")
+    PlayersCount: Int @count(relation: "players")
+    parent: [Location] @belongsTo
+    childs: [Location] @hasMany
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 #
 # MONSTER
 #
 type Monster @model(class: "\\Rpg\\Models\\Monster") {
-    id: ID!
+    id: Int!
     name: String
-    locations: [Location!]! @belongsToMany
     experience: Int!
+    locations: [Location!]! @belongsToMany
     type: MonsterType! @belongsTo
     inventories: [Inventory] @belongsToMany
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 type MonsterType @model(class: "\\Rpg\\Models\\MonsterType") {
-    id: ID!
+    id: Int!
     name: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 type Pet @model(class: "\\Rpg\\Models\\Pet") {
-    id: ID!
+    id: Int!
     name: String!
     monster: Monster! @belongsTo
     player: Player! @belongsTo
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 #
 # ITEMS
 #
 type Item @model(class: "\\Rpg\\Models\\Item") {
-    id: ID!
+    id: Int!
     name: String!
     description: String!
     price: Int!
     recipes: [Recipe] @hasMany
     recipesCount: Int! @count(relation: "recipes")
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 type Recipe @model(class: "\\Rpg\\Models\\Recipe") {
-    id: ID!
+    id: Int!
     name: String
     quantity: Int!
     ingredients: [Ingredient!]! @hasMany
     result: Item! @belongsTo
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 type Ingredient @model(class: "\\Rpg\\Models\\Ingredient") {
-    id: ID!
+    id: Int!
     name: String
     recipe: Recipe! @belongsTo
     item: Item! @belongsTo
     quantity: Int!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 #
 # INVENTORY
 #
 type Inventory @model(class: "\\Rpg\\Models\\Inventory") {
-    id: ID!
+    id: Int!
     name: String!
     items: [Item]! @belongsToMany
     itemsCount: Int! @count(relation: "items")
     Inventory_type: InventoryType @belongsTo
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
 
 type InventoryType @model(class: "\\Rpg\\Models\\InventoryType") {
-    id: ID!
+    id: Int!
     name: String!
     capacity: Int!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
 }
