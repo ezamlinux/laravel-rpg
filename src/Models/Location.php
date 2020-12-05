@@ -2,26 +2,18 @@
 
 namespace Rpg\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Rpg;
 use Rpg\Contract\LocationContract;
 
 class Location extends Model implements LocationContract
 {
-    use HasFactory;
-
     protected $fillable = [
         'name',
         'minimal_level',
         'parent_id',
         'location_type_id'
     ];
-
-    protected static function newFactory()
-    {
-        return \Database\Factories\LocationFactory::new();
-    }
 
     public function monsters()
     {

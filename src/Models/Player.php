@@ -2,7 +2,6 @@
 
 namespace Rpg\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Rpg;
 use Rpg\Contract\PlayerContract;
@@ -11,7 +10,7 @@ use Laravel\Scout\Searchable;
 
 class Player extends Model implements PlayerContract
 {
-    use HasFactory, HasInventory, Searchable;
+    use HasInventory, Searchable;
 
     protected $fillable = [
         'name',
@@ -29,11 +28,6 @@ class Player extends Model implements PlayerContract
             'name' => $this->name,
             'title' => optional($this->title)->name
         ];
-    }
-
-    protected static function newFactory()
-    {
-        return \Database\Factories\PlayerFactory::new();
     }
 
     public function title()

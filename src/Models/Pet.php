@@ -23,9 +23,4 @@ class Pet extends Model implements PetContract
     {
         return $this->belongsTo(Rpg::class('Monster'));
     }
-
-    public function getMonsterTypeIdAttribute()
-    {
-        return $this->monster->monster_type_id;
-    }
 }

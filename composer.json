@@ -14,8 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Rpg\\": "src/",
-            "Database\\Factories\\": "database/factories/"
+            "Rpg\\": "src/"
         },
         "files": [
             "src/helpers.php"

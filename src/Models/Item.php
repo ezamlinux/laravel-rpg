@@ -2,7 +2,6 @@
 
 namespace Rpg\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Rpg\Contract\ItemContract;
 use Rpg;
@@ -10,7 +9,7 @@ use Laravel\Scout\Searchable;
 
 class Item extends Model implements ItemContract
 {
-    use Searchable, HasFactory;
+    use Searchable;
 
     protected $fillable = [
         'name',
@@ -27,10 +26,6 @@ class Item extends Model implements ItemContract
         ];
     }
 
-    protected static function newFactory()
-    {
-        return \Database\Factories\ItemFactory::new();
-    }
 
     public function recipes()
     {

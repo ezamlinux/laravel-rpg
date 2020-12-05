@@ -18,7 +18,7 @@ return [
         'namespace' => 'Rpg\\Http\\Controllers',
     ],
 
-    // Factory
+    // aliases
     'aliases' => [
       'Rpg' => Rpg\Facades\Rpg::class
     ],
