@@ -6,15 +6,15 @@ use Illuminate\Support\Str;
 
 class Rpg
 {
-    public function __construct()
-    {
-        $this->setModels(config('rpg.models', []));
-    }
-
     /**
      * @var array
      */
     public $models = [];
+
+    public function __construct()
+    {
+        $this->setModels(config('rpg.models', []));
+    }
 
     public function setModels(array $models) : void
     {
@@ -33,7 +33,7 @@ class Rpg
         return app($this->models[Str::studly($name)]);
     }
 
-    public function class($name) : string
+    public function class(string $name) : string
     {
         return $this->models[$name];
     }
