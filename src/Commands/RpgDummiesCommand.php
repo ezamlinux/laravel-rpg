@@ -64,6 +64,11 @@ class RpgDummiesCommand extends Command
 
         $this->source = config($this->option('config'));
 
+        /**
+         * @var array
+         *
+         * all Entity created at the same time
+         */
         $this->timestamps = [
             'created_at' => now(),
             'updated_at' => now(),

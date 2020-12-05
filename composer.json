@@ -9,7 +9,6 @@
     "license": "MIT",
     "require": {
         "php": "^7.4 || ^8",
-        "barryvdh/laravel-dompdf": "^0.8.7",
         "laravel/framework": "^8",
         "nuwave/lighthouse": "v5.*"
     },

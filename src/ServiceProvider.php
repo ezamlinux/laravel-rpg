@@ -106,7 +106,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Define the "api" routes for the application.
+     * Define the "web" routes for the application.
      *
      * These routes are typically stateless.
      *
