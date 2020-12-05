@@ -31,6 +31,7 @@ type Location @model(class: "\\Rpg\\Models\\Location") {
     name: String!
     monsters: [Monster] @belongsToMany
     players: [Player] @hasMany
+    location_type: LocationType @belongsTo
     monstersCount: Int @count(relation: "monsters")
     PlayersCount: Int @count(relation: "players")
     parent: Location @belongsTo
@@ -38,6 +39,12 @@ type Location @model(class: "\\Rpg\\Models\\Location") {
     created_at: DateTime
     updated_at: DateTime
     deleted_at: DateTime
+}
+
+type LocationType @model(class: "\\Rpg\\Models\\LocationType") {
+    id: Int!
+    name: String!
+    locations: [Location] @hasMany
 }
 
 #
